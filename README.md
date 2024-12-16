@@ -8,5 +8,19 @@ but may have additional features added.
 2. extract binary (`devtools`) from target/release
 
 ## Usage:
-linux: `$ ./devtools`
-powershell: `.\devtools.exe`
+linux: `$ ./devtools help`
+powershell: `.\devtools.exe help`
+
+### Showing type limits
+To show the type limits for integers and float types, run the command:
+
+`devtools limits <args>`
+
+where `<args>` can be: `--uint --int --float` for each respective datatype.
+
+Passing no arguments shows you the limits for all data types.
+
+
+### Converting decimal to hex
+Supports up to 128-bit unsigned integers. To convert a decimal number:
+`devtools hex -d <number_to_be_converted>`
