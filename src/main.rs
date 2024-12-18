@@ -1,6 +1,6 @@
 use args::*;
 use clap::Parser;
-use dectohex::convert_to_hex;
+use dectohex::{convert_to_dec_from_hex, convert_to_hex};
 
 mod args;
 mod dectohex;
@@ -67,6 +67,13 @@ fn main() {
         Commands::Hex(HexArgs) => {
             let input = HexArgs.DecimalToHex;
             println!("{}", convert_to_hex(input));
+        }
+        Commands::Decimal(DecimalArgs) => {
+            let mut input = DecimalArgs.ToDecimal.as_str();
+            if input.contains("0x") {
+                input = input.strip_prefix("0x").expect("There is a weird prefix at the beginning, please insert '0x' as the correct prefix");
+            }
+            convert_to_dec_from_hex(input.to_string());
         }
         Commands::Limits(LimitArgs) => {
             if LimitArgs.uint {

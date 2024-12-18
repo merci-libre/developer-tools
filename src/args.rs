@@ -9,8 +9,10 @@ pub struct DevtoolArgs {
 
 #[derive(Clone, Debug, Subcommand)]
 pub enum Commands {
-    /// Convert Decimal to Hexadecimal and vice versa.
+    /// Convert Decimal to Hexadecimal.
     Hex(HexArgs),
+    /// Convert Hexadecimal to Decimal.
+    Decimal(DecimalArgs),
     /// Show limits of integer and floating point types. Provide no arguments to show limits of all
     /// types as such: `devtools limits`.
     Limits(LimitArgs),
@@ -21,6 +23,12 @@ pub struct HexArgs {
     /// Convert Decimal to Hexadecimal and vice versa.
     #[arg(long, short)]
     pub DecimalToHex: u128,
+}
+
+#[derive(Clone, Debug, Args)]
+pub struct DecimalArgs {
+    #[arg(long, short)]
+    pub ToDecimal: String,
 }
 #[derive(Clone, Debug, Args)]
 pub struct LimitArgs {
