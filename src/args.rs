@@ -20,15 +20,38 @@ pub enum Commands {
 
 #[derive(Clone, Debug, Args)]
 pub struct HexArgs {
-    /// Convert Decimal to Hexadecimal and vice versa.
-    #[arg(long, short)]
-    pub DecimalToHex: u128,
+    /// Converts an entire file to Hexadecimal. STDOUT is hexadecimal.
+    #[arg(long, short, default_value = "")]
+    pub convert_file: String,
+    /// When converting a plaintext file to hex, keep the carriage return values (0x10).
+    #[arg(long, short = 'n')]
+    pub carriage_return: bool,
+    /// Outputs relative information to a text file (hex, decimal values, and original text).
+    #[arg(long, short, default_value = "")]
+    pub output: String,
+    /// Converts a single Decimal to Hexadecimal. If the input is a string, it converts the string
+    ///
+    /// to bytes and then returns the hexadecimal values of the string.
+    ///
+    /// If a single number is given, it converts that number to it's represented hexadecimal value.
+    #[arg(long, short, default_value = "")]
+    pub decimal_to_hex: String,
+    /// always convert the inputted string to raw bytes.
+    #[arg(long)]
+    pub raw: bool,
 }
 
 #[derive(Clone, Debug, Args)]
 pub struct DecimalArgs {
-    #[arg(long, short)]
-    pub ToDecimal: String,
+    /// Converts a file containing hexadecimal to decimal values
+    #[arg(long, short, default_value = "")]
+    pub convert_file: String,
+    /// Outputs relative information to a text file (hex, decimal values, and original text).
+    #[arg(long, short, default_value = "")]
+    pub output: String,
+    /// Converts hexadecimal to decimal values.
+    #[arg(long, short, default_value = "")]
+    pub to_decimal: String,
 }
 #[derive(Clone, Debug, Args)]
 pub struct LimitArgs {

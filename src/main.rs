@@ -1,6 +1,7 @@
 use args::*;
 use clap::Parser;
-use dectohex::{convert_to_dec_from_hex, convert_to_hex};
+use dectohex::{convert_from_hex_file, convert_hex_file, convert_to_dec_from_hex, convert_to_hex};
+use std::str::FromStr;
 
 mod args;
 mod dectohex;
@@ -60,41 +61,74 @@ fn floatingpoint(no_args: u8) {
         std::f64::MIN
     );
 }
+fn convertbytes(vec: Vec<u8>) {
+    for i in vec {
+        eprint!("{} ", convert_to_hex(i.into()));
+    }
+    eprint!("\n");
+}
 fn main() {
     let args = DevtoolArgs::parse();
     let command = args.commands;
+    eprintln!("Developer tools by westwardfishdme.\n( https://github.com/westwardfishdme | https://westwardfishd.me )\n");
     match command {
         Commands::Hex(HexArgs) => {
-            let input = HexArgs.DecimalToHex;
-            println!("{}", convert_to_hex(input));
+            let input = HexArgs.decimal_to_hex;
+
+            //convert a raw string if option is given, does not try to interpret otherwise.
+            if HexArgs.raw {
+                convertbytes(input.into_bytes());
+            } else {
+                match input.parse::<u128>() {
+                    Ok(n) => eprintln!("{}", convert_to_hex(n)),
+                    Err(_) => convertbytes(input.into_bytes()),
+                }
+            }
+
+            if !HexArgs.convert_file.is_empty() {
+                convert_hex_file(
+                    HexArgs.convert_file,
+                    !HexArgs.output.is_empty(),
+                    HexArgs.carriage_return,
+                    HexArgs.output,
+                )
+                .unwrap();
+            }
         }
         Commands::Decimal(DecimalArgs) => {
-            let mut input = DecimalArgs.ToDecimal.as_str();
+            let input = DecimalArgs.to_decimal;
             if input.contains("0x") {
-                input = input.strip_prefix("0x").expect("There is a weird prefix at the beginning, please insert '0x' as the correct prefix");
+                input.strip_prefix("0x").unwrap();
             }
-            convert_to_dec_from_hex(input.to_string());
+            if !input.is_empty() {
+                let decimal = convert_to_dec_from_hex(input).unwrap();
+                eprintln!("{}", decimal);
+            }
+
+            if !DecimalArgs.convert_file.is_empty() {
+                convert_from_hex_file(
+                    DecimalArgs.convert_file,
+                    !DecimalArgs.output.is_empty(),
+                    DecimalArgs.output,
+                )
+                .unwrap();
+            }
         }
         Commands::Limits(LimitArgs) => {
             if LimitArgs.uint {
-                println!("Developer tools by westwardfishdme.\n( https://github.com/westwardfishdme | https://westwardfishd.me )\n");
                 unsigned(0);
             }
             if LimitArgs.int {
-                println!("Developer tools by westwardfishdme.\n( https://github.com/westwardfishdme | https://westwardfishd.me )\n");
                 signed();
             }
             if LimitArgs.float {
-                println!("Developer tools by westwardfishdme.\n( https://github.com/westwardfishdme | https://westwardfishd.me )\n");
                 floatingpoint(0);
             }
             if !LimitArgs.uint && !LimitArgs.int && !LimitArgs.float {
-                println!("Developer tools by westwardfishdme.\n( https://github.com/westwardfishdme | https://westwardfishd.me )\n");
                 signed();
                 unsigned(1);
                 floatingpoint(1);
             }
         }
-        _ => todo!(),
     }
 }
