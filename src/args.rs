@@ -26,7 +26,9 @@ pub struct HexArgs {
     /// When converting a plaintext file to hex, keep the carriage return values (0x10).
     #[arg(long, short = 'n')]
     pub carriage_return: bool,
-    /// Outputs relative information to a text file (hex, decimal values, and original text).
+    /// Outputs relative information to a text file (hex, decimal values, and original text) for
+    ///
+    /// (file conversion only!)
     #[arg(long, short, default_value = "")]
     pub output: String,
     /// Converts a single Decimal to Hexadecimal. If the input is a string, it converts the string
@@ -34,11 +36,19 @@ pub struct HexArgs {
     /// to bytes and then returns the hexadecimal values of the string.
     ///
     /// If a single number is given, it converts that number to it's represented hexadecimal value.
-    #[arg(long, short, default_value = "")]
     pub decimal_to_hex: String,
+    /// no prefix (0x)
+    #[arg(long)]
+    pub no_prefix: bool,
     /// always convert the inputted string to raw bytes.
     #[arg(long)]
     pub raw: bool,
+    /// strip the output of spaces and new line
+    #[arg(long, short)]
+    pub spaces: bool,
+    /// when outputting bytes, add '\x' as a prefix
+    #[arg(long, short = 'x')]
+    pub machine: bool,
 }
 
 #[derive(Clone, Debug, Args)]

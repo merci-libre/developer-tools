@@ -1,7 +1,7 @@
 use args::*;
 use clap::Parser;
 use dectohex::{convert_from_hex_file, convert_hex_file, convert_to_dec_from_hex, convert_to_hex};
-use std::str::FromStr;
+use std::{fmt::format, str::FromStr};
 
 mod args;
 mod dectohex;
@@ -61,10 +61,33 @@ fn floatingpoint(no_args: u8) {
         std::f64::MIN
     );
 }
-fn convertbytes(vec: Vec<u8>) {
+fn convertbytes(vec: Vec<u8>, prefix: bool, spaces: bool, add_machine_prefix: bool) {
+    let mut string: String = String::new();
     for i in vec {
-        eprint!("{} ", convert_to_hex(i.into()));
+        let output = convert_to_hex(i.into());
+        let mut before_return: String = String::new();
+
+        match add_machine_prefix {
+            true => {
+                before_return = format!("\\x{} ", output.strip_prefix("0x").unwrap());
+            }
+            false => (),
+        }
+        if !add_machine_prefix {
+            match prefix {
+                true => before_return = format!("{} ", output.strip_prefix("0x").unwrap()),
+                false => before_return = format!("{} ", output),
+            }
+        }
+        string.push_str(before_return.as_str());
     }
+
+    match spaces {
+        true => string = string.replace(" ", ""),
+        false => (),
+    }
+
+    println!("{}", string);
     eprint!("\n");
 }
 fn main() {
@@ -77,11 +100,28 @@ fn main() {
 
             //convert a raw string if option is given, does not try to interpret otherwise.
             if HexArgs.raw {
-                convertbytes(input.into_bytes());
+                convertbytes(
+                    input.into_bytes(),
+                    HexArgs.no_prefix,
+                    HexArgs.spaces,
+                    HexArgs.machine,
+                );
             } else {
                 match input.parse::<u128>() {
-                    Ok(n) => eprintln!("{}", convert_to_hex(n)),
-                    Err(_) => convertbytes(input.into_bytes()),
+                    Ok(n) => {
+                        let mut string: String = convert_to_hex(n);
+                        if HexArgs.no_prefix {
+                            string = string.strip_prefix("0x").unwrap().to_string();
+                        }
+
+                        println!("{}", string)
+                    }
+                    Err(_) => convertbytes(
+                        input.into_bytes(),
+                        HexArgs.no_prefix,
+                        HexArgs.spaces,
+                        HexArgs.machine,
+                    ),
                 }
             }
 
@@ -102,7 +142,7 @@ fn main() {
             }
             if !input.is_empty() {
                 let decimal = convert_to_dec_from_hex(input).unwrap();
-                eprintln!("{}", decimal);
+                println!("{}", decimal);
             }
 
             if !DecimalArgs.convert_file.is_empty() {
