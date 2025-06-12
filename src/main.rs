@@ -1,6 +1,9 @@
 use args::*;
 use clap::Parser;
-use dectohex::{convert_from_hex_file, convert_hex_file, convert_to_dec_from_hex, convert_to_hex};
+use dectohex::{
+    convert_from_hex_file, convert_hex_file, convert_to_dec_from_hex, convert_to_hex,
+    rotate_char_to_hex,
+};
 use std::{fmt::format, str::FromStr};
 
 mod args;
@@ -61,10 +64,14 @@ fn floatingpoint(no_args: u8) {
         std::f64::MIN
     );
 }
-fn convertbytes(vec: Vec<u8>, prefix: bool, spaces: bool, add_machine_prefix: bool) {
+fn convertbytes(vec: Vec<u8>, prefix: bool, spaces: bool, add_machine_prefix: bool, rotate: i64) {
     let mut string: String = String::new();
     for i in vec {
-        let output = convert_to_hex(i.into());
+        let mut output = String::new();
+        match rotate {
+            0 => output = convert_to_hex(i.into()),
+            _ => output = rotate_char_to_hex(rotate, i.into()),
+        }
         let mut before_return: String = String::new();
 
         match add_machine_prefix {
@@ -97,14 +104,19 @@ fn main() {
     match command {
         Commands::Hex(HexArgs) => {
             let input = HexArgs.decimal_to_hex;
+            let mut raw = HexArgs.raw;
+            if HexArgs.rotate != 0 {
+                raw = true;
+            }
 
             //convert a raw string if option is given, does not try to interpret otherwise.
-            if HexArgs.raw {
+            if raw {
                 convertbytes(
                     input.into_bytes(),
                     HexArgs.no_prefix,
                     HexArgs.spaces,
                     HexArgs.machine,
+                    HexArgs.rotate,
                 );
             } else {
                 match input.parse::<u128>() {
@@ -121,6 +133,7 @@ fn main() {
                         HexArgs.no_prefix,
                         HexArgs.spaces,
                         HexArgs.machine,
+                        HexArgs.rotate,
                     ),
                 }
             }

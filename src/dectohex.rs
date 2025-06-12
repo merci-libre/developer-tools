@@ -3,6 +3,7 @@ use std::{
     io::Write,
     num::ParseIntError,
     process::exit,
+    u64,
 };
 pub fn convert_to_hex(number: u128) -> String {
     let result = format!("{:#x}", number);
@@ -20,6 +21,18 @@ fn check_readability(path: &String) {
             exit(1);
         }
     }
+}
+pub fn rotate_char_to_hex(rotation: i64, value: u8) -> String {
+    let mut rotation_result = value as i64 + rotation;
+    if rotation_result < 0 {
+        rotation_result = 255 - (rotation_result.abs() % 255);
+    }
+    if rotation_result > 255 {
+        rotation_result = rotation_result % 255;
+    }
+    let result = format!("{:#x}", rotation_result);
+
+    return result;
 }
 
 fn vec_to_string(vec: Vec<u8>) -> String {

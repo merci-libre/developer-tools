@@ -49,6 +49,10 @@ pub struct HexArgs {
     /// when outputting bytes, add '\x' as a prefix
     #[arg(long, short = 'x')]
     pub machine: bool,
+    /// rotate the byte values of each character. Always interprets input into raw bytes.
+    /// proper syntax: -r=<value>;
+    #[arg(long, short = 'r', default_value = "0")]
+    pub rotate: i64,
 }
 
 #[derive(Clone, Debug, Args)]
