@@ -16,6 +16,8 @@ pub enum Commands {
     /// Show limits of integer and floating point types. Provide no arguments to show limits of all
     /// types as such: `devtools limits`.
     Limits(LimitArgs),
+    ///Helps calculate chmod file permissions
+    Chmod(ChmodArgs),
 }
 
 #[derive(Clone, Debug, Args)]
@@ -55,6 +57,22 @@ pub struct HexArgs {
     pub rotate: i64,
 }
 
+#[derive(Clone, Debug, Args)]
+pub struct ChmodArgs {
+    /// Calculates a Chmod Mode to its corresponding Octal Value.
+    ///
+    /// e.g (rwxrwxrwx) -> 777
+    ///
+    /// Valid input characters:
+    ///
+    /// r- read
+    ///
+    /// w- write
+    ///
+    /// x- execute
+    #[arg(default_value = "")]
+    pub calculate: String,
+}
 #[derive(Clone, Debug, Args)]
 pub struct DecimalArgs {
     /// Converts a file containing hexadecimal to decimal values

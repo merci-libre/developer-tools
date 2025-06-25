@@ -3,7 +3,6 @@ use std::{
     io::Write,
     num::ParseIntError,
     process::exit,
-    u64,
 };
 pub fn convert_to_hex(number: u128) -> String {
     let result = format!("{:#x}", number);

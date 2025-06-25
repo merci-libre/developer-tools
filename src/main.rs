@@ -1,12 +1,13 @@
 use args::*;
+use chmod::chmod_perms_calculator;
 use clap::Parser;
 use dectohex::{
     convert_from_hex_file, convert_hex_file, convert_to_dec_from_hex, convert_to_hex,
     rotate_char_to_hex,
 };
-use std::{fmt::format, str::FromStr};
 
 mod args;
+mod chmod;
 mod dectohex;
 /* prints all of the max integers for each
 * data type. (1-overflow point.)*/
@@ -181,6 +182,40 @@ fn main() {
                 signed();
                 unsigned(1);
                 floatingpoint(1);
+            }
+        }
+        Commands::Chmod(ChmodArgs) => {
+            let test_string = ChmodArgs.calculate;
+            let (
+                value,          /*String*/
+                interpretation, /*String*/
+                permissions,    /*bTreemap*/
+            ) = chmod_perms_calculator(test_string);
+
+            println!("Permissions String:\n{interpretation}\nChmod Octal Value: {value}");
+
+            for (class, perms) in permissions {
+                match class.as_str() {
+                    "owner" => {
+                        eprintln!(
+                    "\nThe owner has the following permissions:\nread: {}\nwrite: {}\nexecute: {}",
+                    perms.readperms, perms.writeperms, perms.executeperms
+                );
+                    }
+                    "group" => {
+                        eprintln!(
+                    "\nAll members of a group have the following permissions:\nread: {}\nwrite: {}\nexecute: {}",
+                    perms.readperms, perms.writeperms, perms.executeperms
+                );
+                    }
+                    "public" => {
+                        eprintln!(
+                    "\nAll users have the following permissions:\nread: {}\nwrite: {}\nexecute: {}",
+                    perms.readperms, perms.writeperms, perms.executeperms
+                );
+                    }
+                    _ => (),
+                }
             }
         }
     }
