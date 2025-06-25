@@ -1,7 +1,15 @@
 # devtools
 A simple cli-tool written in Rust to give you simple information that you can use to help debug binaries. Currently only returns the maximum and minimums for integer and float types. Can also convert decimal numbers to hexadecimal.
 
-## Building from source:
+## Requirements:
+- Rust (duh.)
+- 64-bit Processor, untested on ARM devices and 32-bit systems.
+
+## Installation:
+**Windows (64-bit)**: Check releases for most current compiled binary.
+**Linux**: binaries are also in releases,
+
+#### From Source
 1. run `cargo build --release`
 2. extract binary (`devtools`) from target/release
 
@@ -30,3 +38,37 @@ As of version 1.0.0, you can also convert a number back into decimal form. You c
 
 both will output '50', as the prefix is stripped prior to being entered into the function.
 
+### Shellcode generation
+Can generate raw Hexvalues for characters for executing shellcode.
+`devtools hex -xs "[STRING TO CONVERT]"`
+also includes a rotational argument for ROT-13 like string manipulation.
+
+### Chmod octal value conversion
+`devtools` also features a chmod file conversion toolkit that can parse through a string such as:
+
+`rwx-wx-wx` -> `733` << and return the chmod octal value
+
+It also provides you with a description of the corresponding permissions based on the inputted string.
+
+*From our previous example:*
+```
+# Sample output
+Permissions String:
+rwx-wx-wx
+Chmod Octal Value: 733
+
+All members of a group have the following permissions:
+read: false
+write: true
+execute: true
+
+The owner has the following permissions:
+read: true
+write: true
+execute: true
+
+All users have the following permissions:
+read: false
+write: true
+execute: true
+```
