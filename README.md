@@ -44,9 +44,11 @@ Can generate raw Hexvalues for characters for executing shellcode.
 also includes a rotational argument for ROT-13 like string manipulation.
 
 ### Chmod octal value conversion
+
 `devtools` also features a chmod file conversion toolkit that can parse through a string such as:
 
-`rwx-wx-wx` -> `733` << and return the chmod octal value
+`rwx-wx-wx` ==> `733` << and return the chmod octal value
+
 
 It also provides you with a description of the corresponding permissions based on the inputted string.
 
