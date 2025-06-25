@@ -2,7 +2,7 @@
 A simple cli-tool written in Rust to give you simple information that you can use to help debug binaries. Currently only returns the maximum and minimums for integer and float types. Can also convert decimal numbers to hexadecimal.
 
 ## Requirements:
-- Rust (duh.)
+- [Rust](https://www.rust-lang.org/tools/install) (duh.)
 - 64-bit Processor, untested on ARM devices and 32-bit systems.
 
 ## Installation:
