@@ -35,13 +35,7 @@ pub fn rotate_char_to_hex(rotation: i64, value: u8) -> String {
 }
 
 fn vec_to_string(vec: Vec<u8>) -> String {
-    let s = match String::from_utf8(vec) {
-        Ok(v) => v,
-        Err(e) => {
-            eprintln!("how the hell did you do this?\n{e}\ntell the dev: line 29 dectohex.rs");
-            exit(1)
-        }
-    };
+    let s = String::from_utf8_lossy(&vec);
     return s.to_string();
 }
 

@@ -16,6 +16,8 @@ pub enum Commands {
     /// Show limits of integer and floating point types. Provide no arguments to show limits of all
     /// types as such: `devtools limits`.
     Limits(LimitArgs),
+    /// Show Data Type Sizes
+    Sizes(SizeArgs),
     ///Helps calculate chmod file permissions
     Chmod(ChmodArgs),
 }
@@ -42,7 +44,9 @@ pub struct HexArgs {
     /// no prefix (0x)
     #[arg(long)]
     pub no_prefix: bool,
-    /// always convert the inputted string to raw bytes.
+    /// always convert the inputted string to raw bytes. If trying to pass integers, it will
+    /// interpret all characters to their respective UTF-8 byte value.
+    /// i.e. devtools hex --raw 0 => 0x30
     #[arg(long)]
     pub raw: bool,
     /// strip the output of spaces and new line
@@ -94,6 +98,18 @@ pub struct LimitArgs {
     #[arg(long, short)]
     pub int: bool,
     /// Show the limits for floating point digits from 32->64 bits.
+    #[arg(long, short)]
+    pub float: bool,
+}
+#[derive(Clone, Debug, Args)]
+pub struct SizeArgs {
+    /// Show the Sizes for unsigned integers from 8->128 bits.
+    #[arg(long, short)]
+    pub uint: bool,
+    /// Show the Sizes for signed integers from 8->128 bits.
+    #[arg(long, short)]
+    pub int: bool,
+    /// Show the Sizes for floating point digits from 32->64 bits.
     #[arg(long, short)]
     pub float: bool,
 }
